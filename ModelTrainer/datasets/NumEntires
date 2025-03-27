@@ -1,0 +1,35 @@
+import os
+
+def count_files_in_directory(directory_path: str) -> int:
+    """
+    Recursively counts the total number of files in a directory and its subdirectories.
+    
+    Args:
+        directory_path (str): The path to the directory to count files in.
+    
+    Returns:
+        int: The total number of files found.
+    """
+    total_files = 0
+    
+    # Check if the directory exists
+    if not os.path.exists(directory_path):
+        print(f"Error: Directory '{directory_path}' does not exist.")
+        return total_files
+    
+    # Walk through the directory and its subdirectories
+    for root, dirs, files in os.walk(directory_path):
+        # Add the number of files in the current directory to the total
+        total_files += len(files)
+    
+    return total_files
+
+if __name__ == "__main__":
+    # Specify the path to your images folder
+    images_path = r"C:/Users/landa/data/images"  # Use raw string to handle backslashes
+    
+    # Count the files
+    file_count = count_files_in_directory(images_path)
+    
+    # Print the result, I got roughly 80,000
+    print(f"Total number of files in '{images_path}' (including subfolders): {file_count}")
