@@ -10,12 +10,12 @@ from omrdatasettools.AudiverisOmrImageGenerator import AudiverisOmrImageGenerato
 from omrdatasettools.HomusImageGenerator import HomusImageGenerator
 from omrdatasettools.OmrDataset import OmrDataset
 
-from datasets.AudiverisOmrImageExtractor import AudiverisOmrImageExtractor
-from datasets.DatasetSplitter import DatasetSplitter
-from datasets.FornesMusicSymbolsImagePreparer import FornesMusicSymbolsImagePreparer
-from datasets.ImageResizer import ImageResizer
-from datasets.MuscimaPlusPlusImageGenerator2 import MuscimaPlusPlusImageGenerator2
-from datasets.OpenOmrImagePreparer import OpenOmrImagePreparer
+import AudiverisOmrImageExtractor
+import DatasetSplitter
+import FornesMusicSymbolsImagePreparer
+import ImageResizer
+import MuscimaPlusPlusImageGenerator2
+import OpenOmrImagePreparer
 
 
 class TrainingDatasetProvider:
@@ -92,25 +92,25 @@ class TrainingDatasetProvider:
         if 'fornes' in datasets:
             raw_dataset_directory = os.path.join(self.dataset_directory, "fornes_raw")
             dataset_downloader.download_and_extract_dataset(OmrDataset.Fornes, raw_dataset_directory)
-            image_preparer = FornesMusicSymbolsImagePreparer()
+            image_preparer = FornesMusicSymbolsImagePreparer.FornesMusicSymbolsImagePreparer()
             image_preparer.prepare_dataset(raw_dataset_directory, self.image_dataset_directory)
         if 'audiveris' in datasets:
             raw_dataset_directory = os.path.join(self.dataset_directory, "audiveris_omr_raw")
             intermediate_image_directory = os.path.join(self.dataset_directory, "audiveris_omr_images")
             dataset_downloader.download_and_extract_dataset(OmrDataset.Audiveris, raw_dataset_directory)
-            image_generator = AudiverisOmrImageGenerator()
+            image_generator = AudiverisOmrImageExtractor.AudiverisOmrImageGenerator()
             image_generator.extract_symbols(raw_dataset_directory, intermediate_image_directory)
-            image_preparer = AudiverisOmrImageExtractor()
+            image_preparer = AudiverisOmrImageExtractor.AudiverisOmrImageExtractor()
             image_preparer.prepare_dataset(intermediate_image_directory, self.image_dataset_directory)
         if 'muscima_pp' in datasets:
             raw_dataset_directory = os.path.join(self.dataset_directory, "muscima_pp_raw")
             dataset_downloader.download_and_extract_dataset(OmrDataset.MuscimaPlusPlus_V2, raw_dataset_directory)
-            image_generator = MuscimaPlusPlusImageGenerator2()
+            image_generator = MuscimaPlusPlusImageGenerator2.MuscimaPlusPlusImageGenerator2()
             image_generator.extract_symbols_for_training(raw_dataset_directory, self.image_dataset_directory)
         if 'openomr' in datasets:
             raw_dataset_directory = os.path.join(self.dataset_directory, "open_omr_raw")
             dataset_downloader.download_and_extract_dataset(OmrDataset.OpenOmr, raw_dataset_directory)
-            image_preparer = OpenOmrImagePreparer()
+            image_preparer = OpenOmrImagePreparer.OpenOmrImagePreparer()
             image_preparer.prepare_dataset(raw_dataset_directory, self.image_dataset_directory)
 
     @staticmethod
@@ -151,3 +151,4 @@ if __name__ == "__main__":
         staff_line_spacing=flags.staff_line_spacing,
         staff_line_vertical_offsets=offsets,
         random_position_on_canvas=False)
+
